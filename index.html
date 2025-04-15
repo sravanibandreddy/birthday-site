@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Navaneeth!</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background: linear-gradient(120deg, #ffecd2 0%, #fcb69f 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: background 1s ease-in-out, background-image 1s ease-in-out;
+    }
+    .btn-container {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+      z-index: 2;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn {
+      padding: 15px 25px;
+      background: #fff;
+      border: none;
+      border-radius: 50px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+      font-weight: bold;
+    }
+    .btn:hover {
+      transform: scale(1.05);
+      background: #ffe0c1;
+    }
+    #message {
+      display: none;
+      font-size: 2.8rem;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 3px 3px 10px rgba(0,0,0,0.6);
+      margin-bottom: 20px;
+      z-index: 2;
+      animation: fadeIn 2s ease-in-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+    #overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="btn-container">
+    <button class="btn" id="btn1">Click Me!</button>
+    <button class="btn" id="btn2">Reveal Wish</button>
+    <button class="btn" id="btn3">Unwrap Surprise!</button>
+  </div>
+  <div id="message">🎂✨ Wishing the most FANTASTIC birthday to the one and only <span style="color: #FFD700;">Navaneeth</span>! 🌟🎉<br>May your year be full of magic, joy, and dreams come true! 🚀💖</div>
+  <div id="overlay"></div>
+
+  <canvas id="confetti"></canvas>
+  <script>
+    const overlay = document.getElementById('overlay');
+
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.body.style.background = "#000";
+        document.body.style.backgroundImage = "url('navaneeth.jpg')";
+        document.querySelector('.btn-container').style.display = 'none';
+        document.getElementById('message').style.display = 'block';
+        overlay.style.background = "rgba(0,0,0,0.6)";
+      });
+    });
+
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    let W = canvas.width = window.innerWidth;
+    let H = canvas.height = window.innerHeight;
+    const particles = [];
+    const colors = ['#ff007f','#ffca3a','#8ac926','#00ffff','#6a4c93'];
+    function random(min, max) { return Math.random() * (max - min) + min; }
+    class Particle {
+      constructor() {
+        this.x = random(0, W);
+        this.y = random(-H, 0);
+        this.r = random(5, 15);
+        this.d = random(2, 5);
+        this.color = colors[Math.floor(random(0, colors.length))];
+        this.tilt = random(-10, 10);
+        this.tiltAngleIncremental = random(0.05, 0.12);
+        this.tiltAngle = 0;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.lineWidth = this.r / 2;
+        ctx.strokeStyle = this.color;
+        ctx.moveTo(this.x + this.tilt + this.r / 4, this.y);
+        ctx.lineTo(this.x + this.tilt, this.y + this.tilt + this.r / 4);
+        ctx.stroke();
+      }
+    }
+    function initConfetti() {
+      for (let i = 0; i < 120; i++) particles.push(new Particle());
+      animate();
+    }
+    function animate() {
+      ctx.clearRect(0, 0, W, H);
+      particles.forEach((p, i) => {
+        p.tiltAngle += p.tiltAngleIncremental;
+        p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+        p.x += Math.sin(p.d);
+        p.tilt = Math.sin(p.tiltAngle) * 15;
+        if (p.y > H) { particles[i] = new Particle(); particles[i].y = random(-20, 0); }
+        p.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+    window.addEventListener('resize', () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; });
+    initConfetti();
+  </script>
+</body>
+</html>
